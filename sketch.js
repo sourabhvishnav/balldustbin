@@ -1,77 +1,72 @@
-var helicopterIMG, helicopterSprite, packageSprite,packageIMG;
-var packageBody,ground
+var package,ground
 const Engine = Matter.Engine;
 const World = Matter.World;
 const Bodies = Matter.Bodies;
 const Body = Matter.Body;
 const Render = Matter.Render;
 
-var ground,ball;
 var dpart1,dpart2,dpart3;
-var ground2;
 
-function preload(){}
 
 function setup() {
-	createCanvas(600, 500);
+	createCanvas(500, 500);
 
 
 	engine = Engine.create();
-	world = engine.world;
+	world  = engine.world;
 
-	var ground_options ={
-		isStatic:true
-	}
-	var ground2_options ={
-		isStatic:true
-	}
-	//packageBody = Bodies.circle(width/2 , 200 , 5 , {restitution:1.5, isStatic:false});
-	//World.add(world, packageBody);
+	package = Bodies.circle(25 , 450 , 5 , {restitution:0.1, isStatic:false});
+	World.add(world, package);
 	
+
 	//Create a Ground
-	ground = Bodies.rectangle(300,500,500,20,ground_options);
-	World.add(world, ground);
-	
-	ground2 = Bodies.rectangle(602,250,500,20,ground_options);
-	World.add(world, ground);
-	
-	ball = new Ball(265,450,30,30);
-	 
+	ground = Bodies.rectangle(width/2, 495, width, 10 , {isStatic:true} );
+ 	World.add(world, ground);
+
+	dpart1 = new Dustbin(410,465,8,70);
+	dpart3 = new Dustbin(480,465,8,70);
+	dpart2 = new Dustbin(445,495,70,8);
+
 	Engine.run(engine);
 
-	dpart1 = new Dustbin(450,458,10,70);
-	dpart2 = new Dustbin(485,488,80,10);
-	dpart3 = new Dustbin(520,458,10,70);
 }
 
+
 function draw() {
-  background(0);
-  Engine.update(engine);
 
-  rectMode(CENTER);
-  fill("red");
-  rect(ground.position.x,ground.position.y,600,15);
+	Engine.update(engine);
+	background(0);
 
-  fill("red");
-  rect(ground2.position.x,ground2.position.y,15,600);
+   rectMode(CENTER);
+   fill("red");
+   rect(ground.position.x,ground.position.y,500,10);
+   
+   fill("tan")
+   ellipse(package.position.x,package.position.y,30,30);
 
-  fill("white")
-  text("Press up arrow key to throw",200,250);
+   console.log(package.position.x);
   
+    
   dpart1.display();
   dpart3.display();
   dpart2.display();
+ 
+
+  if(package.x<430){
+	  World.remove(package.body);
+  }
   
-  ball.display();
-   
-  keyPressed();
-
+  
   drawSprites();
-
+ 
 }
+
 function keyPressed(){
-	 
-	if(keyCode === UP_ARROW){
-		Matter.body.applyForce(ball.body,ball.body.position,{x:85,y:100});
+	if(keyCode == UP_ARROW) {
+		Body.applyForce( package, {x: package.position.x, y: package.position.y}, {x: 0.0008, y: -0.0008});
 	}
 }
+
+
+
+
