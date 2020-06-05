@@ -1,4 +1,4 @@
-var package,ground
+
 const Engine = Matter.Engine;
 const World = Matter.World;
 const Bodies = Matter.Bodies;
@@ -6,26 +6,25 @@ const Body = Matter.Body;
 const Render = Matter.Render;
 
 var dpart1,dpart2,dpart3;
-
+var package,ground;
 
 function setup() {
-	createCanvas(500, 500);
+	createCanvas(800, 700);
 
 
 	engine = Engine.create();
 	world  = engine.world;
 
-	package = Bodies.circle(25 , 450 , 5 , {restitution:0.1, isStatic:false});
-	World.add(world, package);
+	package = new Ball(120,450,20);
 	
 
-	//Create a Ground
-	ground = Bodies.rectangle(width/2, 495, width, 10 , {isStatic:true} );
- 	World.add(world, ground);
+	
+	ground = new Ground(width/2,655,width,10);
 
-	dpart1 = new Dustbin(410,465,8,70);
-	dpart3 = new Dustbin(480,465,8,70);
-	dpart2 = new Dustbin(445,495,70,8);
+
+	dpart1 = new bucket(680,625,5,55);
+	dpart3 = new bucket(655,657,55,5);
+	dpart2 = new bucket(632,625,5,55);
 
 	Engine.run(engine);
 
@@ -37,33 +36,25 @@ function draw() {
 	Engine.update(engine);
 	background(0);
 
-   rectMode(CENTER);
-   fill("red");
-   rect(ground.position.x,ground.position.y,500,10);
-   
-   fill("tan")
-   ellipse(package.position.x,package.position.y,30,30);
 
-   console.log(package.position.x);
-  
+   ground.display();
+
+  package.display();
     
   dpart1.display();
   dpart3.display();
   dpart2.display();
  
-
-  if(package.x<430){
-	  World.remove(package.body);
-  }
-  
   
   drawSprites();
  
 }
 
 function keyPressed(){
-	if(keyCode == UP_ARROW) {
-		Body.applyForce( package, {x: package.position.x, y: package.position.y}, {x: 0.0008, y: -0.0008});
+	if(keyCode === UP_ARROW) {
+
+		Matter.Body.applyForce(package.body,package.body.position,{x:19.9,y:-9.9});
+		
 	}
 }
 
